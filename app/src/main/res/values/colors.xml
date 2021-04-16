@@ -11,4 +11,7 @@
     <color name="dark_blue">#060434</color>
     <color name="light_grey">#FAFAFA</color>
     <color name="brown">#C95B2B</color>
+
+    <color name="light_black">#333333</color>
+    <color name="purple">#B30B88</color>
 </resources>

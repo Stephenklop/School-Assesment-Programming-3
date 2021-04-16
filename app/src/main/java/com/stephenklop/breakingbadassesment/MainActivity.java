@@ -41,27 +41,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initializing our variables
-        characterRV = findViewById(R.id.homepage_items);
-
-        Thread charactersThread = new Thread(() -> {
-            mCharacters = apiService.getAllCharacters();
-        });
-
-        Thread adapterThread = new Thread(() -> {
-            buildRecyclerView();
-        });
-
-        // Start and join the threads
-        try {
-            charactersThread.start();
-            charactersThread.join();
-
-            adapterThread.start();
-            adapterThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        // Initializing our variables
+//        characterRV = findViewById(R.id.homepage_items);
+//
+//        Thread charactersThread = new Thread(() -> {
+//            mCharacters = apiService.getAllCharacters();
+//        });
+//
+//        Thread adapterThread = new Thread(() -> {
+//            buildRecyclerView();
+//        });
+//
+//        // Start and join the threads
+//        try {
+//            charactersThread.start();
+//            charactersThread.join();
+//
+//            adapterThread.start();
+//            adapterThread.join();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -82,43 +82,43 @@ public class MainActivity extends AppCompatActivity {
         return super.dispatchTouchEvent(event);
     }
 
-    private void filter(String text) {
-        // Creating a new array list to filter our data
-        ArrayList<Character> filteredList = new ArrayList<>();
+//    private void filter(String text) {
+//        // Creating a new array list to filter our data
+//        ArrayList<Character> filteredList = new ArrayList<>();
+//
+//        // Running a for loop to compare elements
+//        for(Character item : mCharacters) {
+//
+//            // Checking if the given string matches with the name of any character in our recycler view
+//            if(item.getmName().toLowerCase().contains(text.toLowerCase())) {
+//
+//                // If the item matches, we are adding it to our filtered list
+//                filteredList.add(item);
+//            }
+//        }
+//
+//        if(filteredList.isEmpty()) {
+//            characterRV.setVisibility(View.GONE);
+//            findViewById(R.id.homepage_items_notfound).setVisibility(View.VISIBLE);
+//        } else {
+//            characterRV.setVisibility(View.VISIBLE);
+//            findViewById(R.id.homepage_items_notfound).setVisibility(View.GONE);
+//            mAdapter.filterList(filteredList);
+//        }
+//    }
 
-        // Running a for loop to compare elements
-        for(Character item : mCharacters) {
-
-            // Checking if the given string matches with the name of any character in our recycler view
-            if(item.getmName().toLowerCase().contains(text.toLowerCase())) {
-
-                // If the item matches, we are adding it to our filtered list
-                filteredList.add(item);
-            }
-        }
-
-        if(filteredList.isEmpty()) {
-            characterRV.setVisibility(View.GONE);
-            findViewById(R.id.homepage_items_notfound).setVisibility(View.VISIBLE);
-        } else {
-            characterRV.setVisibility(View.VISIBLE);
-            findViewById(R.id.homepage_items_notfound).setVisibility(View.GONE);
-            mAdapter.filterList(filteredList);
-        }
-    }
-
-    private void buildRecyclerView() {
-        // Initializing our adapter class
-        mAdapter = new CharacterAdapter(mCharacters, this);
-
-        // Adding layout manager to our recycler view
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        characterRV.setHasFixedSize(true);
-
-        // Setting layout manager to our recycler view
-        characterRV.setLayoutManager(layoutManager);
-
-        // Connecting adapter to our recycler view
-        characterRV.setAdapter(mAdapter);
-    }
+//    private void buildRecyclerView() {
+//        // Initializing our adapter class
+//        mAdapter = new CharacterAdapter(mCharacters, this);
+//
+//        // Adding layout manager to our recycler view
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+//        characterRV.setHasFixedSize(true);
+//
+//        // Setting layout manager to our recycler view
+//        characterRV.setLayoutManager(layoutManager);
+//
+//        // Connecting adapter to our recycler view
+//        characterRV.setAdapter(mAdapter);
+//    }
 }

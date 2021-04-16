@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:fontFamily="@font/proxima_nova"
+        android:text="Breaking Bad"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:textAllCaps="true"
+        android:textColor="@color/light_black"
+        android:textFontWeight="900"
+        android:textSize="30sp" />
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="30dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_baseline_search_24"/>
+</RelativeLayout>
