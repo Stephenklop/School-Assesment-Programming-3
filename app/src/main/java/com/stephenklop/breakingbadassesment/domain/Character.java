@@ -1,14 +1,14 @@
 package com.stephenklop.breakingbadassesment.domain;
 
-import java.util.List;
+import android.content.res.Resources;
+
+import com.stephenklop.breakingbadassesment.R;
 
 public class Character {
     private int mId;
-    private String mName, mBirthday, mImg, mStatus, mNickname, mPortrayed;
-    private List<String> mOccupation;
-    private List<Integer> mAppearance;
+    private String mName, mBirthday, mImg, mStatus, mNickname, mPortrayed, mOccupation, mAppearance;
 
-    public Character(int mId, String mName, String mBirthday, String mImg, String mStatus, String mNickname, String mPortrayed, List<String> mOccupation, List<Integer> mAppearance) {
+    public Character(int mId, String mName, String mBirthday, String mImg, String mStatus, String mNickname, String mPortrayed, String mOccupation, String mAppearance) {
         this.mId = mId;
         this.mName = mName;
         this.mBirthday = mBirthday;
@@ -53,6 +53,17 @@ public class Character {
     }
 
     public String getmStatus() {
+//        switch (mStatus) {
+//            case "presumed dead":
+//                return Resources.getSystem().getString(R.string.presumed_dead);
+//            case "deceased":
+//                return Resources.getSystem().getString(R.string.deceased);
+//            case "alive":
+//                return Resources.getSystem().getString(R.string.alive);
+//            default:
+//                return Resources.getSystem().getString(R.string.unknown);
+//        }
+
         return mStatus;
     }
 
@@ -76,19 +87,19 @@ public class Character {
         this.mPortrayed = mPortrayed;
     }
 
-    public List<String> getmOccupation() {
+    public String getmOccupation() {
         return mOccupation;
     }
 
-    public void setmOccupation(List<String> mOccupation) {
+    public void setmOccupation(String mOccupation) {
         this.mOccupation = mOccupation;
     }
 
-    public List<Integer> getmAppearance() {
+    public String getmAppearance() {
         return mAppearance;
     }
 
-    public void setmAppearance(List<Integer> mAppearance) {
+    public void setmAppearance(String mAppearance) {
         this.mAppearance = mAppearance;
     }
 

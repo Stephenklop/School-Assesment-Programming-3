@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">BreakingBadAssesment</string>
-    <string name="homepage_search">Search</string>
-    <string name="homepage_not_found">No tickets found</string>
+    <string name="deceased">Deceased</string>
+    <string name="presumed_dead">Presumed dead</string>
+    <string name="alive">Alive</string>
+    <string name="unknown">Unknown</string>
 </resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="deceased">Overleden</string>
+    <string name="presumed_dead">Vermoedelijk dood</string>
+    <string name="alive">Levend</string>
+    <string name="unknown">Onbekend</string>
+</resources>

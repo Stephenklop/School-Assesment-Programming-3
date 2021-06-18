@@ -12,29 +12,26 @@ public class CharacterParse {
     public static Character jsonObjectToObject(JSONObject jsonCharacterObject) throws JSONException {
 
         // Load all attributes and return a Java object
-        int id = jsonCharacterObject.getInt("id");
+        int id = jsonCharacterObject.getInt("char_id");
         String name = jsonCharacterObject.getString("name");
         String birthday = jsonCharacterObject.getString("birthday");
         String img = jsonCharacterObject.getString("img");
         String status = jsonCharacterObject.getString("status");
         String nickname = jsonCharacterObject.getString("nickname");
         String potrayed = jsonCharacterObject.getString("portrayed");
-
-        // Load Occupation, appearance and category and store in ArrayList
-        ArrayList<String> occupation = new ArrayList<>();
-        ArrayList<Integer> appearance = new ArrayList<>();
-
         JSONArray jsonOccupation = jsonCharacterObject.getJSONArray("occupation");
         JSONArray jsonAppearance = jsonCharacterObject.getJSONArray("appearance");
 
+        // Load Occupation, appearance and category and store in ArrayList
+        String occupation = "";
+        String appearance = "";
+
         for (int i = 0; i < jsonOccupation.length(); i++) {
-            String occupationName = jsonOccupation.getJSONObject(i).getString("name");
-            occupation.add(occupationName);
+            occupation = occupation + jsonOccupation.get(i).toString();
         }
 
         for (int i = 0; i < jsonAppearance.length(); i++) {
-            int appearanceInt = jsonAppearance.getJSONObject(i).getInt("name");
-            appearance.add(appearanceInt);
+            appearance = String.valueOf(jsonAppearance.length());
         }
 
         return new Character(id, name, birthday, img, status, nickname, potrayed, occupation, appearance);
