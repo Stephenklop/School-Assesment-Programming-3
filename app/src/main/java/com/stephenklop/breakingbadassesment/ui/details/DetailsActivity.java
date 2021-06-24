@@ -31,7 +31,10 @@ public class DetailsActivity extends AppCompatActivity {
     private Character character;
     private TextView name, nickname, status, birthdate, occupation, seasons;
     private ImageView poster;
+    private QuoteAdapter quoteAdapter;
     private int characterId;
+
+    private int totalQuotesOnPage = 5;
 
     public DetailsActivity() {
         apiService = new APIService();
@@ -118,7 +121,8 @@ public class DetailsActivity extends AppCompatActivity {
             Looper.prepare();
             quotes = apiService.getQuoteByAuthor(character);
 
-            System.out.println(quotes);
+
+
         }).start();
     }
 }

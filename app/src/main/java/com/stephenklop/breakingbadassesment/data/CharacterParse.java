@@ -16,11 +16,13 @@ public class CharacterParse {
         String name = jsonCharacterObject.getString("name");
         String birthday = jsonCharacterObject.getString("birthday");
         String img = jsonCharacterObject.getString("img");
-        String status = jsonCharacterObject.getString("status");
         String nickname = jsonCharacterObject.getString("nickname");
         String potrayed = jsonCharacterObject.getString("portrayed");
         JSONArray jsonOccupation = jsonCharacterObject.getJSONArray("occupation");
         JSONArray jsonAppearance = jsonCharacterObject.getJSONArray("appearance");
+
+        // Fix strings
+        String status = jsonCharacterObject.getString("status");
 
         // Load Occupation, appearance and category and store in ArrayList
         String occupation = "";

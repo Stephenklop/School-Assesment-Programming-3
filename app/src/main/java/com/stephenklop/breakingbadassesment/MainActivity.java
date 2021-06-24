@@ -13,11 +13,15 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -29,13 +33,21 @@ import com.stephenklop.breakingbadassesment.logic.LocaleHelper;
 import com.stephenklop.breakingbadassesment.ui.home.CharacterAdapter;
 
 import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,9 +58,6 @@ public class MainActivity extends AppCompatActivity {
     // Create variables
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor sharedPreferencesEditor;
-    private LocalDateTime timePause;
-    private Context context;
-    private Resources resources;
 
     // Creating variables for our UI components
     private RecyclerView characterRV;
@@ -56,14 +65,10 @@ public class MainActivity extends AppCompatActivity {
     // Variable for our adapter class and array list
     private CharacterAdapter mAdapter;
     private List<Character> mCharacters;
-    private View mTitleBar;
-    private ImageView mFlagIconEnglish, mFlagIconDutch;
 
     public MainActivity() {
         localAppStorage = (LocalAppStorage) this.getApplication();
         apiService = new APIService();
-        sharedPreferences = getSharedPreferences("SharedPref", MODE_PRIVATE);
-        sharedPreferencesEditor = sharedPreferences.edit();
     }
 
     @Override
@@ -71,11 +76,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set language toggle
-        languageToggle();
+        // Call shared preferences
+        sharedPreferences = getPreferences(MODE_PRIVATE);
+        sharedPreferencesEditor = sharedPreferences.edit();
 
         // Set search view
         setSearchBar();
+
+        // Set radio buttons
+        setRadioButtonActions();
 
         // Initializing our variables
         characterRV = findViewById(R.id.activity_main_rv_items);
@@ -103,6 +112,32 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        sharedPreferencesEditor.putString("lifeCycleLeaveTime", convertCurrentDateTime());
+        sharedPreferencesEditor.commit();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        String currentTime = convertCurrentDateTime();
+        String leaveTime = sharedPreferences.getString("lifeCycleLeaveTime", currentTime);
+        Duration duration = Duration.between(OffsetDateTime.parse(leaveTime), OffsetDateTime.parse(currentTime));
+
+        Toast.makeText(getApplicationContext(), "U bent " + duration.getSeconds() + " seconden weg geweest." , Toast.LENGTH_LONG).show();
+    }
+
+    private String convertCurrentDateTime() {
+        TimeZone tz = TimeZone.getTimeZone("GMT+2");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
+        df.setTimeZone(tz);
+        return df.format(new Date());
     }
 
     private void setSearchBar() {
@@ -140,30 +175,6 @@ public class MainActivity extends AppCompatActivity {
 
         mAdapter.filterList(filteredList);
         Toast.makeText(getApplicationContext(), filteredList.size() + " items ingeladen!", Toast.LENGTH_SHORT).show();
-
-//        if(filteredList.isEmpty()) {
-//            // If no item is added in our filtered list, we are displaying a toast message that no data is found
-//            characterRV.setVisibility(View.GONE);
-//
-//        } else {
-//            characterRV.setVisibility(View.VISIBLE);
-//            mAdapter.filterList(filteredList);
-//        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        System.out.println("pause");
-        timePause = LocalDateTime.now();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        System.out.println("resume");
-        LocalDateTime timeResume = LocalDateTime.now();
-
     }
 
     @Override
@@ -199,20 +210,88 @@ public class MainActivity extends AppCompatActivity {
         characterRV.setAdapter(mAdapter);
     }
 
-    private void languageToggle() {
-//        mTitleBar = findViewById(R.id.fragment_menubar);
-//        mFlagIconEnglish = findViewById(R.id.fragment_menubar_flag_english);
-//        mFlagIconDutch = findViewById(R.id.fragment_menubar_flag_dutch);
+    private void setRadioButtonActions() {
+
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.activity_main_rg);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                System.out.println(checkedId);
+
+                // Creating a new array list to filter our data
+                ArrayList<Character> filteredList = new ArrayList<>();
+
+                // Running a for loop to compare elements
+                for(Character character : mCharacters) {
+
+                    switch (checkedId) {
+                        case 1:
+                            mAdapter.filterList(mCharacters);
+                            sharedPreferencesEditor.remove("selectedStatus");
+                            sharedPreferencesEditor.commit();
+                            Toast.makeText(getApplicationContext(), mCharacters.size() + " items ingeladen!", Toast.LENGTH_SHORT).show();
+                            break;
+                        case 2:
+                            if(character.getmStatus().toLowerCase().equals("presumed dead")) {
+                                filteredList.add(character);
+                            }
+                            sharedPreferencesEditor.putString("selectedStatus", "presumed dead");
+                            sharedPreferencesEditor.commit();
+                            break;
+                        case 3:
+                            if(character.getmStatus().toLowerCase().equals("alive")) {
+                                filteredList.add(character);
+                            }
+                            sharedPreferencesEditor.putString("selectedStatus", "alive");
+                            sharedPreferencesEditor.commit();
+                            break;
+                        case 4:
+                            if(character.getmStatus().toLowerCase().equals("deceased")) {
+                                filteredList.add(character);
+                            }
+                            sharedPreferencesEditor.putString("selectedStatus", "deceased");
+                            sharedPreferencesEditor.commit();
+                            break;
+                        case 5:
+                            if(character.getmStatus().toLowerCase().equals("unknown")) {
+                                filteredList.add(character);
+                            }
+                            sharedPreferencesEditor.putString("selectedStatus", "unknown");
+                            sharedPreferencesEditor.commit();
+                            break;
+                    }
+                }
+
+                if(filteredList.size() != 0) {
+                    mAdapter.filterList(filteredList);
+                    Toast.makeText(getApplicationContext(), filteredList.size() + " items ingeladen!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+//        RadioButton radioButtonAlive = (RadioButton) findViewById(R.id.activity_main_rg_rb_alive);
+//        radioButtonAlive.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                System.out.println("checked");
 //
-//        mFlagIconDutch.setOnClickListener(v -> {
-//            context = LocaleHelper.setLocale(MainActivity.this, "en");
-//            resources = context.getResources();
-//            System.out.println("Dutch flag icon");
-//        });
+//                // Creating a new array list to filter our data
+//                ArrayList<Character> filteredList = new ArrayList<>();
 //
-//        mFlagIconEnglish.setOnClickListener(v -> {
-//            context = LocaleHelper.setLocale(MainActivity.this, "nl");
-//            resources = context.getResources();
+//                // Running a for loop to compare elements
+//                for(Character character : mCharacters) {
+//
+//                    // Filter all items with the alive status
+//                    if(character.getmStatus().toLowerCase().equals("alive")) {
+//
+//                        // If the item is matched we are adding it to our filtered list
+//                        filteredList.add(character);
+//                    }
+//                }
+//
+//                mAdapter.filterList(filteredList);
+//                Toast.makeText(getApplicationContext(), filteredList.size() + " items ingeladen!", Toast.LENGTH_SHORT).show();
+//            }
 //        });
     }
 }

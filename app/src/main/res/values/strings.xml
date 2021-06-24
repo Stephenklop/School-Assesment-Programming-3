@@ -1,6 +1,8 @@
 <resources>
-    <string name="deceased">Deceased</string>
     <string name="presumed_dead">Presumed dead</string>
     <string name="alive">Alive</string>
     <string name="unknown">Unknown</string>
+    <string name="search">Search...</string>
+    <string name="deceased">Deceased</string>
+    <string name="all">All</string>
 </resources>

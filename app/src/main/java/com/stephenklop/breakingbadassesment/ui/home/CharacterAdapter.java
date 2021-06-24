@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.stephenklop.breakingbadassesment.R;
 import com.stephenklop.breakingbadassesment.domain.Character;
 import com.stephenklop.breakingbadassesment.ui.details.DetailsActivity;
+import com.stephenklop.breakingbadassesment.ui.details.FullscreenActivity;
 
 import java.util.List;
 
@@ -30,16 +31,14 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
     public CharacterAdapter(List<Character> characters, Context context) {
         this.context = context;
         this.mCharacters = characters;
+        System.out.println(mCharacters);
     }
-
 
     // Method for filtering our recyclerview items
     public void filterList(List<Character> filterList) {
 
         // The line below is to add our filtered list in our ticket array list
         mCharacters = filterList;
-
-        System.out.println(mCharacters);
 
         // The line below is to notify our adapter to update the recycler view
         notifyDataSetChanged();
@@ -67,21 +66,19 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
         holder.nickName.setText(character.getmNickname());
 
         // Set Status
-        System.out.println("Lowercase: " + character.getmStatus().toLowerCase());
+        holder.status.setText(character.getmStatus());
 
+        // Make image clickable
+        holder.poster.setOnClickListener(v -> {
+            Intent intent = new Intent(context, FullscreenActivity.class);
+            intent.putExtra("posterImage", character.getmImg());
+            intent.putExtra("prevActivity", "com.stephenklop.breakingbadassesment.MainActivity");
 
-        if(character.getmStatus().toLowerCase().equals("presumed dead")) {
-            holder.status.setText(context.getResources().getString(R.string.presumed_dead));
-        } else if(character.getmStatus().toLowerCase().equals("deceased")) {
-            holder.status.setText(context.getResources().getString(R.string.deceased));
-        } else if(character.getmStatus().toLowerCase().equals("alive")) {
-            holder.status.setText(context.getResources().getString(R.string.alive));
-        } else if(character.getmStatus().toLowerCase().equals("unknown")) {
-            holder.status.setText(context.getResources().getString(R.string.unknown));
-        }
+            context.startActivity(intent);
+        });
 
-        // Make item clickable
-        holder.parentLayout.setOnClickListener(v -> {
+        // Make text content clickable
+        holder.textLayout.setOnClickListener(v -> {
             Intent intent = new Intent(context, DetailsActivity.class);
             intent.putExtra("characterId", character.getmId());
             intent.putExtra("prevActivity", "com.stephenklop.breakingbadassesment.MainActivity");
@@ -100,7 +97,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
         // Creating variables for the views
         ImageView poster;
         TextView name, nickName, status;
-        LinearLayout parentLayout;
+        LinearLayout textLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -110,7 +107,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
             name = itemView.findViewById(R.id.item_homepage_tv_name);
             nickName = itemView.findViewById(R.id.item_homepage_tv_nickname);
             status = itemView.findViewById(R.id.item_homepage_tv_status);
-            parentLayout = itemView.findViewById(R.id.item_homepage);
+            textLayout = itemView.findViewById(R.id.item_homepage_text_content);
         }
     }
 }

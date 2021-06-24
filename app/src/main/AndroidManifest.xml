@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BreakingBadAssesment">
         <activity android:name=".ui.details.DetailsActivity" />
+        <activity android:name=".ui.details.FullscreenActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

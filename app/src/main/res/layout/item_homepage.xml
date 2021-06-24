@@ -15,6 +15,7 @@
         app:shapeAppearanceOverlay="@style/roundImageView" />
 
     <LinearLayout
+        android:id="@+id/item_homepage_text_content"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight=".77"

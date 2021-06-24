@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="deceased">Overleden</string>
     <string name="presumed_dead">Vermoedelijk dood</string>
     <string name="alive">Levend</string>
     <string name="unknown">Onbekend</string>
+    <string name="search">Zoeken...</string>
+    <string name="deceased">Overleden</string>
+    <string name="all">Alles</string>
 </resources>
