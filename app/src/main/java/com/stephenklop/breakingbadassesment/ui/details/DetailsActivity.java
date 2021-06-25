@@ -1,14 +1,18 @@
 package com.stephenklop.breakingbadassesment.ui.details;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.stephenklop.breakingbadassesment.R;
@@ -23,35 +27,69 @@ public class DetailsActivity extends AppCompatActivity {
 
     // Create final variables
     private final APIService apiService;
+    private final String LOG_TAG = this.getClass().getSimpleName();
+    private final LocalAppStorage localAppStorage;
 
-    private LocalAppStorage localAppStorage;
+    // Create variables
     private String previousActivity;
-    private List<Character> characters;
-    private List<Quote> quotes;
-    private Character character;
+    private Character currentCharacter;
+    private int characterId;
     private TextView name, nickname, status, birthdate, occupation, seasons;
     private ImageView poster;
-    private QuoteAdapter quoteAdapter;
-    private int characterId;
 
-    private int totalQuotesOnPage = 5;
+    // Create variables for our UI components
+    private RecyclerView quotesRV;
+
+    // Create variables for our adapter class and array list
+    private QuoteAdapter mAdapter;
+    private List<Character> mCharacters;
+    private List<Quote> mQuotes;
 
     public DetailsActivity() {
         apiService = new APIService();
         localAppStorage = (LocalAppStorage) this.getApplication();
-        characters = localAppStorage.getCharacters();
+        mCharacters = localAppStorage.getCharacters();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(LOG_TAG, "On creation of the details page");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
+        // Set back button
         setBackButton();
+
+        // Initializing our variables
+        quotesRV = findViewById(R.id.activity_details_rv_quotes);
+
+        // Set our character details
         setCharacterDetails();
+
+        // Create threads
+        Thread quotesThread = new Thread(() -> {
+            mQuotes = apiService.getQuoteByAuthor(currentCharacter.getmName());
+        });
+
+        Thread adapterThread = new Thread(() -> {
+            buildQuoteRecyclerView();
+        });
+
+        // Start and join the threads
+        try {
+           quotesThread.start();
+           quotesThread.join();
+
+           adapterThread.start();
+           adapterThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setBackButton() {
+        Log.d(LOG_TAG, "Set back button on details page");
+
         characterId = getIntent().getIntExtra("characterId", -1);
         previousActivity = getIntent().getStringExtra("prevActivity");
 
@@ -70,7 +108,7 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void setCharacterDetails() {
-        System.out.println("Set Character Details");
+        Log.d(LOG_TAG, "Set character details on details page");
         name = findViewById(R.id.activity_details_txt_name);
         nickname = findViewById(R.id.activity_details_txt_nickname);
         status = findViewById(R.id.activity_details_txt_status);
@@ -79,50 +117,53 @@ public class DetailsActivity extends AppCompatActivity {
         seasons = findViewById(R.id.activity_details_txt_seasons);
         poster = findViewById(R.id.activity_details_img);
 
-        System.out.println(characterId);
-
         if(characterId >= 0) {
 
             // Load the corresponding character.
-            for(Character character : characters) {
+            for(Character character : mCharacters) {
                 if(character.getmId() == characterId) {
-                    this.character = character;
+                    this.currentCharacter = character;
                 }
             }
 
             // Set Name
-            name.setText(character.getmName());
+            name.setText(currentCharacter.getmName());
 
             // Set Nickname
-            nickname.setText(character.getmNickname());
+            nickname.append(" " + currentCharacter.getmNickname());
 
             // Set Image
-            Glide.with(getApplicationContext()).load(character.getmImg()).into(poster);
+            Glide.with(getApplicationContext()).load(currentCharacter.getmImg()).into(poster);
 
             // Set Status
-            status.setText(character.getmStatus());
+            status.append(" " + currentCharacter.getmStatus());
 
             // Set Birthdate
-            birthdate.setText(character.getmBirthday());
+            birthdate.append(" " + currentCharacter.getmBirthday());
 
             // Set Occupation
-            occupation.setText(character.getmOccupation());
+            occupation.append(" " + currentCharacter.getmOccupation());
 
             // Set Seasons
-            seasons.setText(character.getmAppearance());
-
-            // Set Quotes
-            setCharacterQuotes(character.getmName());
+            seasons.append(" " + currentCharacter.getmAppearance());
         }
     }
 
-    private void setCharacterQuotes(String character) {
-        new Thread(() -> {
-            Looper.prepare();
-            quotes = apiService.getQuoteByAuthor(character);
+    private void buildQuoteRecyclerView() {
+        Log.d(LOG_TAG, "Build quote recycler view on homepage");
 
+        // Initializing our adapter class
+        mAdapter = new QuoteAdapter(mQuotes, this);
 
+        // Adding layout manager to our recycler view
+        quotesRV.setLayoutManager(new GridLayoutManager(getApplicationContext(), 1));
 
-        }).start();
+        if(mQuotes.size() != 0) {
+            // Connecting adapter to our recycler view
+            findViewById(R.id.activity_details_not_items_found).setVisibility(View.INVISIBLE);
+            quotesRV.setAdapter(mAdapter);
+        } else {
+            findViewById(R.id.activity_details_not_items_found).setVisibility(View.VISIBLE);
+        }
     }
 }

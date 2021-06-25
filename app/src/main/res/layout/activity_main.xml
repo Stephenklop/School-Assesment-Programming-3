@@ -30,45 +30,65 @@
         android:id="@+id/activity_main_filter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/activity_main_search"
-        android:paddingLeft="25dp"
-        android:scrollbars="none">
+        android:layout_marginTop="10dp"
+        android:scrollbars="none"
+        android:overScrollMode="never"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/activity_main_search">
 
         <RadioGroup
             android:id="@+id/activity_main_rg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:paddingLeft="25dp"
             android:paddingRight="25dp">
 
             <RadioButton
+                android:id="@+id/activity_main_rg_first"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/all"
-                android:layout_marginRight="10dp"/>
+                android:layout_marginRight="10dp"
+                android:background="@drawable/btn_radio_button_states"
+                android:button="@android:color/transparent"
+                android:checked="true"
+                android:text="@string/all" />
 
             <RadioButton
+                android:id="@+id/activity_main_rg_second"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/presumed_dead"
-                android:layout_marginRight="10dp"/>
+                android:layout_marginRight="10dp"
+                android:background="@drawable/btn_radio_button_states"
+                android:button="@android:color/transparent"
+                android:text="@string/presumed_dead" />
 
             <RadioButton
+                android:id="@+id/activity_main_rg_third"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/alive"
-                android:layout_marginRight="10dp"/>
+                android:layout_marginRight="10dp"
+                android:background="@drawable/btn_radio_button_states"
+                android:button="@android:color/transparent"
+                android:text="@string/alive" />
 
             <RadioButton
+                android:id="@+id/activity_main_rg_fourth"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/deceased"
-                android:layout_marginRight="10dp"/>
+                android:layout_marginRight="10dp"
+                android:background="@drawable/btn_radio_button_states"
+                android:button="@android:color/transparent"
+                android:text="@string/deceased" />
 
             <RadioButton
+                android:id="@+id/activity_main_rg_fifth"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/unknown"/>
+                android:background="@drawable/btn_radio_button_states"
+                android:button="@android:color/transparent"
+                android:text="@string/unknown" />
         </RadioGroup>
     </HorizontalScrollView>
 
@@ -79,9 +99,23 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="25dp"
+        android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_main_filter" />
+
+    <TextView
+        android:id="@+id/activity_main_not_items_found"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:text="@string/noItems"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_main_filter" />
 </androidx.constraintlayout.widget.ConstraintLayout>

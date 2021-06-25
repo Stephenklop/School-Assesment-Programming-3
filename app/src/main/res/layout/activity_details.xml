@@ -5,39 +5,56 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageButton
-        android:id="@+id/activity_details_imgbtn_backicon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="18dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_arrow_left"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/activity_details_txt_name"
+    <LinearLayout
+        android:id="@+id/activity_details_topbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:text="Naam"
-        app:layout_constraintTop_toBottomOf="@+id/activity_details_imgbtn_backicon"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingTop="18dp"
+        android:paddingBottom="18dp"
+        android:paddingLeft="25dp"
+        android:gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/activity_details_imgbtn_backicon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_arrow_left"/>
+
+        <TextView
+            android:id="@+id/activity_details_txt_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Naam"
+            android:textSize="20sp"
+            android:layout_marginLeft="25dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/proxima_nova_semibold"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/activity_details_txt_nickname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Bijnaam"
+        android:text="@string/nickname"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_details_txt_name" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_details_topbar"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/proxima_nova_semibold"/>
 
     <ImageView
         android:id="@+id/activity_details_img"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_details_txt_nickname" />
 
@@ -45,16 +62,29 @@
         android:id="@+id/activity_details_txt_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
-        android:text="Status"
-        app:layout_constraintTop_toBottomOf="@+id/activity_details_img"
-        tools:layout_editor_absoluteX="0dp" />
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="25dp"
+        android:text="@string/status"
+        android:textColor="@color/black"
+        android:fontFamily="@font/proxima_nova_regular"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_details_img" />
 
     <TextView
         android:id="@+id/activity_details_txt_birthdate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Geboortedatum"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="25dp"
+        android:fontFamily="@font/proxima_nova_regular"
+        android:text="@string/birthdate"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_details_txt_status" />
 
@@ -62,7 +92,14 @@
         android:id="@+id/activity_details_txt_occupation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Beroepen"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="25dp"
+        android:fontFamily="@font/proxima_nova_regular"
+        android:text="@string/jobs"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_details_txt_birthdate" />
 
@@ -70,15 +107,57 @@
         android:id="@+id/activity_details_txt_seasons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Aantal seizoenen"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="25dp"
+        android:fontFamily="@font/proxima_nova_regular"
+        android:text="@string/totalSeasons"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_details_txt_occupation" />
 
-    <ListView
-        android:id="@+id/activity_details_lv_quotes"
-        android:layout_width="0dp"
-        android:layout_height="558dp"
+    <TextView
+        android:id="@+id/activity_details_txt_quotes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="25dp"
+        android:fontFamily="@font/proxima_nova_regular"
+        android:text="@string/quotes"
+        android:textColor="@color/black"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_details_txt_seasons" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/activity_details_rv_quotes"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_details_txt_quotes" />
+
+    <TextView
+        android:id="@+id/activity_details_not_items_found"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/noQuotes"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_details_txt_quotes" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,7 @@
 package com.stephenklop.breakingbadassesment.data;
 
+import android.util.Log;
+
 import com.stephenklop.breakingbadassesment.domain.Character;
 
 import org.json.JSONArray;
@@ -9,6 +11,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class CharacterParse {
+
     public static Character jsonObjectToObject(JSONObject jsonCharacterObject) throws JSONException {
 
         // Load all attributes and return a Java object
@@ -29,7 +32,7 @@ public class CharacterParse {
         String appearance = "";
 
         for (int i = 0; i < jsonOccupation.length(); i++) {
-            occupation = occupation + jsonOccupation.get(i).toString();
+            occupation = occupation + jsonOccupation.get(i).toString() + ", ";
         }
 
         for (int i = 0; i < jsonAppearance.length(); i++) {

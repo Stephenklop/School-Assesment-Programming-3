@@ -6,4 +6,13 @@
     <string name="search">Zoeken...</string>
     <string name="deceased">Overleden</string>
     <string name="all">Alles</string>
+    <string name="nickname">Bijnaam:</string>
+    <string name="birthdate">Geboortedatum:</string>
+    <string name="jobs">Beroepen:</string>
+    <string name="totalSeasons">Aantal seizoenen:</string>
+    <string name="loaded">items ingeladen!</string>
+    <string name="youHaveBeenAway">U bent weggeweest voor</string>
+    <string name="seconds">seconden</string>
+    <string name="noQuotes">Er zijn geen quotes gevonden!</string>
+    <string name="noItems">Er zijn geen items gevonden!</string>
 </resources>

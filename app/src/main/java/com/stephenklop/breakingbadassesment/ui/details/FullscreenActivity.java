@@ -2,6 +2,7 @@ package com.stephenklop.breakingbadassesment.ui.details;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -12,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.stephenklop.breakingbadassesment.R;
 
 public class FullscreenActivity extends AppCompatActivity {
+    private final String LOG_TAG = this.getClass().getSimpleName();
     private String characterPosterLink, previousActivity;
 
     @Override
@@ -27,6 +29,7 @@ public class FullscreenActivity extends AppCompatActivity {
     }
 
     private void setBackButton() {
+        Log.d(LOG_TAG, "Set back button on fullscreen page");
         characterPosterLink = getIntent().getStringExtra("posterImage");
         previousActivity = getIntent().getStringExtra("prevActivity");
 
@@ -45,6 +48,7 @@ public class FullscreenActivity extends AppCompatActivity {
     }
 
     private void setPosterImage() {
+        Log.d(LOG_TAG, "Set poster image on fullscreen page");
         Glide.with(getApplicationContext()).load(characterPosterLink).into((ImageView) findViewById(R.id.activity_detail_image_img));
     }
 }

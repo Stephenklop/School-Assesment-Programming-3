@@ -5,4 +5,15 @@
     <string name="search">Search...</string>
     <string name="deceased">Deceased</string>
     <string name="all">All</string>
+    <string name="nickname">Nickname:</string>
+    <string name="status" translatable="false">Status:</string>
+    <string name="birthdate">Birthday:</string>
+    <string name="jobs">Jobs:</string>
+    <string name="totalSeasons">Total seasons:</string>
+    <string name="quotes" translatable="false">Quotes:</string>
+    <string name="loaded">items loaded!</string>
+    <string name="youHaveBeenAway">You have been away for</string>
+    <string name="seconds">seconds</string>
+    <string name="noQuotes">No quotes found!</string>
+    <string name="noItems">No items found!</string>
 </resources>

@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     // Create final variables
     private final APIService apiService;
     private final LocalAppStorage localAppStorage;
+    private final String LOG_TAG = this.getClass().getSimpleName();
 
     // Create variables
     private SharedPreferences sharedPreferences;
@@ -73,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(LOG_TAG, "On creation of the homepage");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -94,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             Looper.prepare();
             mCharacters = apiService.getAllCharacters();
             localAppStorage.setCharacters(mCharacters);
-            Toast.makeText(getApplicationContext(), mCharacters.size() + " items ingeladen!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), mCharacters.size() + " " + getResources().getString(R.string.loaded), Toast.LENGTH_LONG).show();
         });
 
         Thread adapterThread = new Thread(() -> {
@@ -116,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
+        Log.d(LOG_TAG, "On pause of the homepage");
         super.onPause();
 
         sharedPreferencesEditor.putString("lifeCycleLeaveTime", convertCurrentDateTime());
@@ -124,16 +127,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        Log.d(LOG_TAG, "On resume of the homepage");
         super.onResume();
 
         String currentTime = convertCurrentDateTime();
         String leaveTime = sharedPreferences.getString("lifeCycleLeaveTime", currentTime);
         Duration duration = Duration.between(OffsetDateTime.parse(leaveTime), OffsetDateTime.parse(currentTime));
 
-        Toast.makeText(getApplicationContext(), "U bent " + duration.getSeconds() + " seconden weg geweest." , Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), getResources().getString(R.string.youHaveBeenAway) + " " + duration.getSeconds() + " " + getResources().getString(R.string.seconds) , Toast.LENGTH_LONG).show();
     }
 
     private String convertCurrentDateTime() {
+        Log.d(LOG_TAG, "Convert DateTime to String");
         TimeZone tz = TimeZone.getTimeZone("GMT+2");
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
         df.setTimeZone(tz);
@@ -141,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setSearchBar() {
+        Log.d(LOG_TAG, "Set the searchbar on homepage");
         SearchView searchView = (SearchView) findViewById(R.id.fragment_search_searchInput);
         searchView.clearFocus();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -159,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void filter(String text) {
+        Log.d(LOG_TAG, "Set filter on homepage");
         // Creating a new array list to filter our data
         ArrayList<Character> filteredList = new ArrayList<>();
 
@@ -173,13 +180,21 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        mAdapter.filterList(filteredList);
-        Toast.makeText(getApplicationContext(), filteredList.size() + " items ingeladen!", Toast.LENGTH_SHORT).show();
+        if(filteredList.isEmpty()) {
+            findViewById(R.id.activity_main_not_items_found).setVisibility(View.VISIBLE);
+            characterRV.setVisibility(View.GONE);
+        } else {
+            findViewById(R.id.activity_main_not_items_found).setVisibility(View.GONE);
+            characterRV.setVisibility(View.VISIBLE);
+            mAdapter.filterList(filteredList);
+            Toast.makeText(getApplicationContext(), mCharacters.size() + " " + getResources().getString(R.string.loaded), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
     // Method to remove keyboard when clicked outside of input field
     public boolean dispatchTouchEvent(MotionEvent event) {
+        Log.d(LOG_TAG, "Clicked outside keyboard");
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
             if (v instanceof EditText) {
@@ -196,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void buildRecyclerView() {
+        Log.d(LOG_TAG, "Fill Recyclerview on homepage");
         // Initializing our adapter class
         mAdapter = new CharacterAdapter(mCharacters, this);
 
@@ -206,17 +222,24 @@ public class MainActivity extends AppCompatActivity {
             characterRV.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
         }
 
-        // Connecting adapter to our recycler view
-        characterRV.setAdapter(mAdapter);
+        if(mCharacters.size() != 0) {
+            // Connecting adapter to our recycler view
+            findViewById(R.id.activity_main_not_items_found).setVisibility(View.INVISIBLE);
+            characterRV.setAdapter(mAdapter);
+        } else {
+            findViewById(R.id.activity_main_not_items_found).setVisibility(View.VISIBLE);
+        }
     }
 
     private void setRadioButtonActions() {
+        Log.d(LOG_TAG, "Add listeners to the radio buttons on homepage");
 
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.activity_main_rg);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 System.out.println(checkedId);
+                System.out.println(group);
 
                 // Creating a new array list to filter our data
                 ArrayList<Character> filteredList = new ArrayList<>();
@@ -224,74 +247,47 @@ public class MainActivity extends AppCompatActivity {
                 // Running a for loop to compare elements
                 for(Character character : mCharacters) {
 
-                    switch (checkedId) {
-                        case 1:
-                            mAdapter.filterList(mCharacters);
-                            sharedPreferencesEditor.remove("selectedStatus");
-                            sharedPreferencesEditor.commit();
-                            Toast.makeText(getApplicationContext(), mCharacters.size() + " items ingeladen!", Toast.LENGTH_SHORT).show();
-                            break;
-                        case 2:
-                            if(character.getmStatus().toLowerCase().equals("presumed dead")) {
-                                filteredList.add(character);
-                            }
-                            sharedPreferencesEditor.putString("selectedStatus", "presumed dead");
-                            sharedPreferencesEditor.commit();
-                            break;
-                        case 3:
-                            if(character.getmStatus().toLowerCase().equals("alive")) {
-                                filteredList.add(character);
-                            }
-                            sharedPreferencesEditor.putString("selectedStatus", "alive");
-                            sharedPreferencesEditor.commit();
-                            break;
-                        case 4:
-                            if(character.getmStatus().toLowerCase().equals("deceased")) {
-                                filteredList.add(character);
-                            }
-                            sharedPreferencesEditor.putString("selectedStatus", "deceased");
-                            sharedPreferencesEditor.commit();
-                            break;
-                        case 5:
-                            if(character.getmStatus().toLowerCase().equals("unknown")) {
-                                filteredList.add(character);
-                            }
-                            sharedPreferencesEditor.putString("selectedStatus", "unknown");
-                            sharedPreferencesEditor.commit();
-                            break;
+                    if(checkedId == R.id.activity_main_rg_first) {
+                        mAdapter.filterList(mCharacters);
+                        sharedPreferencesEditor.remove("selectedStatus");
+                        sharedPreferencesEditor.commit();
+                        Toast.makeText(getApplicationContext(), mCharacters.size() + " " + getResources().getString(R.string.loaded), Toast.LENGTH_LONG).show();
+                    } else if(checkedId == R.id.activity_main_rg_second) {
+                        if(character.getmStatus().toLowerCase().equals("presumed dead")) {
+                            filteredList.add(character);
+                        }
+                        sharedPreferencesEditor.putString("selectedStatus", "presumed dead");
+                        sharedPreferencesEditor.commit();
+                        Toast.makeText(getApplicationContext(), mCharacters.size() + " " + getResources().getString(R.string.loaded), Toast.LENGTH_LONG).show();
+                    } else if(checkedId == R.id.activity_main_rg_third) {
+                        if(character.getmStatus().toLowerCase().equals("alive")) {
+                            filteredList.add(character);
+                        }
+                        sharedPreferencesEditor.putString("selectedStatus", "alive");
+                        sharedPreferencesEditor.commit();
+                        Toast.makeText(getApplicationContext(), mCharacters.size() + " " + getResources().getString(R.string.loaded), Toast.LENGTH_LONG).show();
+                    } else if(checkedId == R.id.activity_main_rg_fourth) {
+                        if(character.getmStatus().toLowerCase().equals("deceased")) {
+                            filteredList.add(character);
+                        }
+                        sharedPreferencesEditor.putString("selectedStatus", "deceased");
+                        sharedPreferencesEditor.commit();
+                        Toast.makeText(getApplicationContext(), mCharacters.size() + " " + getResources().getString(R.string.loaded), Toast.LENGTH_LONG).show();
+                    } else if(checkedId == R.id.activity_main_rg_fifth) {
+                        if(character.getmStatus().toLowerCase().equals("unknown")) {
+                            filteredList.add(character);
+                        }
+                        sharedPreferencesEditor.putString("selectedStatus", "unknown");
+                        sharedPreferencesEditor.commit();
+                        Toast.makeText(getApplicationContext(), mCharacters.size() + " " + getResources().getString(R.string.loaded), Toast.LENGTH_LONG).show();
                     }
                 }
 
                 if(filteredList.size() != 0) {
                     mAdapter.filterList(filteredList);
-                    Toast.makeText(getApplicationContext(), filteredList.size() + " items ingeladen!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), mCharacters.size() + " " + getResources().getString(R.string.loaded), Toast.LENGTH_LONG).show();
                 }
             }
         });
-
-//        RadioButton radioButtonAlive = (RadioButton) findViewById(R.id.activity_main_rg_rb_alive);
-//        radioButtonAlive.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                System.out.println("checked");
-//
-//                // Creating a new array list to filter our data
-//                ArrayList<Character> filteredList = new ArrayList<>();
-//
-//                // Running a for loop to compare elements
-//                for(Character character : mCharacters) {
-//
-//                    // Filter all items with the alive status
-//                    if(character.getmStatus().toLowerCase().equals("alive")) {
-//
-//                        // If the item is matched we are adding it to our filtered list
-//                        filteredList.add(character);
-//                    }
-//                }
-//
-//                mAdapter.filterList(filteredList);
-//                Toast.makeText(getApplicationContext(), filteredList.size() + " items ingeladen!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
     }
 }

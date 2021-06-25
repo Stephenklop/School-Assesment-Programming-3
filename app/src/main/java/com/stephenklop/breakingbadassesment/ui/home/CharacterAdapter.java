@@ -3,6 +3,7 @@ package com.stephenklop.breakingbadassesment.ui.home;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.stephenklop.breakingbadassesment.ui.details.FullscreenActivity;
 import java.util.List;
 
 public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.ViewHolder> {
+    private final String LOG_TAG = this.getClass().getSimpleName();
 
     // Creating a variable for the array list and context
     private List<Character> mCharacters;
@@ -36,6 +38,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
 
     // Method for filtering our recyclerview items
     public void filterList(List<Character> filterList) {
+        Log.d(LOG_TAG, "Apply filtered list");
 
         // The line below is to add our filtered list in our ticket array list
         mCharacters = filterList;
@@ -47,6 +50,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Log.d(LOG_TAG, "Create viewholder homepage");
         // The line below is to inflate our layout
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_homepage, parent, false);
         return new ViewHolder(view);
@@ -54,6 +58,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Log.d(LOG_TAG, "bind viewholder homepage");
         Character character = mCharacters.get(position);
 
         // Set Image
@@ -89,6 +94,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
 
     @Override
     public int getItemCount() {
+        Log.d(LOG_TAG, "Get item count of characters on the homepage");
         // Returning the size of the array list
         return mCharacters.size();
     }

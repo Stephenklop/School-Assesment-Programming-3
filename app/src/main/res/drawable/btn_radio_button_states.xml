@@ -4,6 +4,7 @@
         <shape android:shape="rectangle">
             <corners android:radius="5dp" />
             <solid android:color="#487F5A" />
+            <padding android:left="15dp" android:right="15dp" />
         </shape>
     </item>
     <item android:state_checked="false">
